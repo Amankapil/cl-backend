@@ -51,7 +51,12 @@ import {
   getWebProducDev,
   getWebdigitalmarket,
   addWebInfodigitalmark,
+  application,
+  Enquery,
+  addhomeimg,
 } from "../ctrl/controller.js";
+
+import multer from "multer";
 
 const router = express.Router();
 
@@ -107,7 +112,26 @@ router.post("/login", Login);
 router.post("/send_mail", sendMailContact);
 router.post("/send_mail_career", sendMailCareer);
 
+const storage = multer.diskStorage({
+  destination: (req, res, cb) => {
+    cb(null, "addhomeimg");
+  },
+  filename: (req, res, cb) => {
+    cb(
+      null,
+      filename.fieldname +
+        "-" +Date.now() +"-" +path.extname(file.originalFilename)
+    );
+  },
+});
+const upload = multer({ storage: storage });
+router.post("/addhomeimg", upload.single("image"), addhomeimg);
+
 router.get("/logout", Logout);
+router.get("/application", application);
+router.get("/enquery", Enquery);
+
+// router.get("/addhomeimg", addhomeimg);
 // router.put("/update/:id", updateWebInfo);
 // router.delete("/dele/:id", remove);
 

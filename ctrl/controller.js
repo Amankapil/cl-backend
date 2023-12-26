@@ -1,8 +1,12 @@
 import db from "../index.js";
 
 import path from "path";
+import multer from "multer";
 // import cookieParser from "cookie-parser";
 // import bcrypt from "bcrypt";
+
+import nodemailer from "nodemailer";
+import { log } from "console";
 
 export const addWebInfo = (req, res) => {
   try {
@@ -22,6 +26,53 @@ export const addWebInfo = (req, res) => {
     });
   } catch (err) {}
 };
+
+export const addhomeimg = (req, res) => {
+  try {
+    // const { homeHero } = req.body;
+
+    // Assuming 'image' is the name attribute in your form for the file input
+    const homeimg = req.file;
+    console.log(homeimg);
+    console.log(req.body);
+
+    const data = {
+      // homeHero: homeHero,
+      homeimg: homeimg, // Assuming your database has a column named 'imagePath'
+    };
+
+    db.query("INSERT INTO img_store SET ?", data, (err, rows, fields) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send("Internal Server Error");
+      } else {
+        console.log(rows);
+        res.send("Added successfully");
+      }
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+// export const addhomeimg = (req, res) => {
+//   try {
+//     // const { image } = req.files.image;
+//     const { homeHero } = req.body;
+//     const data = {
+//       homeHero: homeHero,
+//     };
+//     db.query("INSERT INTO home_page set ?", data, (err, rows, fields) => {
+//       if (err) {
+//         console.error(err);
+//       } else {
+//         console.log(rows);
+//         res.send("added");
+//       }
+//     });
+//   } catch (err) {}
+// };
 
 export const addWebInfoAbout = (req, res) => {
   try {
@@ -436,62 +487,102 @@ export const addWebInfodigitalmark = (req, res) => {
 // /////////////////////////////////////////////////////
 
 export const sendMailContact = (req, res) => {
-  const { fristName, lastName, email, number, message } = req.body;
+  const { fristName, lastName, email, number, enquery, message } = req.body;
   console.log(req.body);
 
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: "info@codelinear.com", // Replace with your own email address
-      pass: "hffsiftjfbzbraej", // Replace with your own email password
-    },
-  });
-  // zcgdsscknnjxmjlh
-
-  const mailOptions = {
-    from: { email }, // Replace with your own email address
-    to: "info@codelinear.com", // Replace with the recipient's email address
-    subject: "New message from your website",
-    text: `FristName: ${fristName}\n LastName: ${lastName}\n Email: ${email}\n Number: ${number}\nMessage: ${message}`,
+  const data = {
+    // heading: heading,
+    fristName: fristName,
+    lastName: lastName,
+    email: email,
+    number: number,
+    enquery: enquery,
+    message: message,
   };
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.error(error);
-      res.status(500).send("Error sending email");
+
+  db.query("INSERT INTO contact_mail set ?", data, (err, rows, fields) => {
+    if (err) {
+      console.error(err);
     } else {
-      console.log("Email sent:", info.response);
-      res.status(200).send("Email sent successfully");
+      // console.log(rows);
+      res.send("added");
     }
   });
+
+  // const transporter = nodemailer.createTransport({
+  //   service: "gmail",
+  //   auth: {
+  //     user: "info@codelinear.com", // Replace with your own email address
+  //     pass: "hffsiftjfbzbraej", // Replace with your own email password
+  //   },
+  // });
+  // // zcgdsscknnjxmjlh
+
+  // const mailOptions = {
+  //   from: { email }, // Replace with your own email address
+  //   to: "info@codelinear.com", // Replace with the recipient's email address
+  //   subject: "New message from your website",
+  //   text: `FristName: ${fristName}\n LastName: ${lastName}\n Email: ${email}\n Number: ${number}\nMessage: ${message}`,
+  // };
+  // transporter.sendMail(mailOptions, (error, info) => {
+  //   if (error) {
+  //     console.error(error);
+  //     res.status(500).send("Error sending email");
+  //   } else {
+  //     console.log("Email sent:", info.response);
+  //     res.status(200).send("Email sent successfully");
+  //   }
+  // });
 };
+
 export const sendMailCareer = (req, res) => {
-  const { fristName, lastName, email, message } = req.body;
+  const { fristName, lastName, email, message, openposition } = req.body;
   console.log(req.body);
 
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: "hr@codlinear.com", // Replace with your own email address
-      pass: "hhsmejuvtkademrt", // Replace with your own email password
-    },
-  });
-  // zcgdsscknnjxmjlh
-
-  const mailOptions = {
-    from: { email }, // Replace with your own email address
-    to: "hr@codelinear.com", // Replace with the recipient's email address
-    subject: "New message from your website",
-    text: `FristName: ${fristName}\n LastName: ${lastName}\n Email: ${email}\nMessage: ${message}`,
+  const data = {
+    // heading: heading,
+    fristName: fristName,
+    lastName: lastName,
+    email: email,
+    message: message,
+    openposition:openposition,
   };
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.error(error);
-      res.status(500).send("Error sending email");
+
+
+
+  db.query("INSERT INTO career_mail set ?", data, (err, rows, fields) => {
+    if (err) {
+      console.error(err);
     } else {
-      console.log("Email sent:", info.response);
-      res.status(200).send("Email sent successfully");
+      // console.log(rows);
+      res.send("added");
     }
   });
+
+  // const transporter = nodemailer.createTransport({
+  //   service: "gmail",
+  //   auth: {
+  //     user: "hr@codlinear.com", // Replace with your own email address
+  //     pass: "hhsmejuvtkademrt", // Replace with your own email password
+  //   },
+  // });
+  // // zcgdsscknnjxmjlh
+
+  // const mailOptions = {
+  //   from: { email }, // Replace with your own email address
+  //   to: "hr@codelinear.com", // Replace with the recipient's email address
+  //   subject: "New message from your website",
+  //   text: `FristName: ${fristName}\n LastName: ${lastName}\n Email: ${email}\nMessage: ${message}`,
+  // };
+  // transporter.sendMail(mailOptions, (error, info) => {
+  //   if (error) {
+  //     console.error(error);
+  //     res.status(500).send("Error sending email");
+  //   } else {
+  //     console.log("Email sent:", info.response);
+  //     res.status(200).send("Email sent successfully");
+  //   }
+  // });
 };
 
 // //////////////////////////////////////////////////////////////
@@ -917,6 +1008,29 @@ export const getWebdigitalmarket = (req, res) => {
   });
   console.log("welcome");
   // });
+};
+export const application = (req, res) => {
+  // app.get("", (req, res) => {
+  db.query("SELECT * FROM career_mail", (err, rows, fields) => {
+    if (err) {
+      console.error(err);
+    } else {
+      let rve = rows.reverse();
+      res.send(rve);
+    }
+  });
+  // console.log("welcome");
+  // });
+};
+export const Enquery = (req, res) => {
+  // app.get("", (req, res) => {
+  db.query("SELECT * FROM contact_mail", (err, rows, fields) => {
+    if (err) {
+      console.error(err);
+    } else {
+      res.send(rows);
+    }
+  });
 };
 // ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
