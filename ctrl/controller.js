@@ -32,7 +32,7 @@ export const addhomeimg = (req, res) => {
     // const { homeHero } = req.body;
 
     // Assuming 'image' is the name attribute in your form for the file input
-    const homeimg = req.file;
+    const homeimg = req.file.filename;
     console.log(homeimg);
     console.log(req.body);
 
@@ -41,7 +41,7 @@ export const addhomeimg = (req, res) => {
       homeimg: homeimg, // Assuming your database has a column named 'imagePath'
     };
 
-    db.query("INSERT INTO img_store SET ?", data, (err, rows, fields) => {
+    db.query("INSERT INTO  client_img SET ?", data, (err, rows, fields) => {
       if (err) {
         console.error(err);
         res.status(500).send("Internal Server Error");
@@ -442,6 +442,93 @@ export const addWebInfouserExper = (req, res) => {
     });
   } catch (err) {}
 };
+export const addjobs = (req, res) => {
+  try {
+    const { jobTitle, location, experience, description, skills } = req.body;
+    const data = {
+      jobTitle: jobTitle,
+      location: location,
+      experience: experience,
+      description: description,
+      skills: skills,
+    };
+
+    db.query("INSERT INTO dynamic_jobs set ?", data, (err, rows, fields) => {
+      if (err) {
+        console.error(err);
+      } else {
+        console.log(rows);
+        res.send("job added");
+      }
+    });
+  } catch (err) {}
+};
+export const addclintdata = (req, res) => {
+  try {
+    const { clientName, aboutCompany, serviceName } = req.body;
+    const data = {
+      clientName: clientName,
+      aboutCompany: aboutCompany,
+      serviceName: serviceName,
+    };
+
+    db.query("INSERT INTO clients_info set ?", data, (err, rows, fields) => {
+      if (err) {
+        console.error(err);
+      } else {
+        console.log(rows);
+        res.send("client data added");
+      }
+    });
+  } catch (err) {}
+};
+export const addblogpost = (req, res) => {
+  try {
+    const { blogtitle, blogcategory, blogpera, blogimg } = req.body;
+    const data = {
+      blogtitle: blogtitle,
+      blogcategory: blogcategory,
+      blogpera: blogpera,
+      blogimg: blogimg,
+    };
+
+    db.query("INSERT INTO blog_update set ?", data, (err, rows, fields) => {
+      if (err) {
+        console.error(err);
+      } else {
+        console.log(rows);
+        res.send("blog data posted");
+      }
+    });
+  } catch (err) {}
+};
+
+export const deleteJob = (req, res) => {
+  try {
+    const jobId = req.params.id;
+    console.log(
+      "DELETE query:",
+      "DELETE FROM dynamic_jobs WHERE id = ?",
+      jobId
+    );
+    db.query(
+      "DELETE FROM dynamic_jobs WHERE id = ?",
+      jobId,
+      (err, rows, fields) => {
+        if (err) {
+          console.error(err);
+          res.status(500).send("Internal Server Error");
+        } else {
+          console.log(rows);
+          res.status(200).send("Job deleted");
+        }
+      }
+    );
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Internal Server Error");
+  }
+};
 export const addWebInfoproducdev = (req, res) => {
   try {
     const { heading } = req.body;
@@ -545,10 +632,8 @@ export const sendMailCareer = (req, res) => {
     lastName: lastName,
     email: email,
     message: message,
-    openposition:openposition,
+    openposition: openposition,
   };
-
-
 
   db.query("INSERT INTO career_mail set ?", data, (err, rows, fields) => {
     if (err) {
@@ -1022,6 +1107,19 @@ export const application = (req, res) => {
   // console.log("welcome");
   // });
 };
+export const getJobOpening = (req, res) => {
+  // app.get("", (req, res) => {
+  db.query("SELECT * FROM dynamic_jobs", (err, rows, fields) => {
+    if (err) {
+      console.error(err);
+    } else {
+      let rve = rows.reverse();
+      res.send(rve);
+    }
+  });
+  // console.log("welcome");
+  // });
+};
 export const Enquery = (req, res) => {
   // app.get("", (req, res) => {
   db.query("SELECT * FROM contact_mail", (err, rows, fields) => {
@@ -1032,6 +1130,29 @@ export const Enquery = (req, res) => {
     }
   });
 };
+
+export const getclientimg = (req, res) => {
+  // app.get("", (req, res) => {
+  db.query("SELECT * FROM client_img", (err, rows, fields) => {
+    if (err) {
+      console.error(err);
+    } else {
+      res.send(rows);
+    }
+  });
+};
+
+export const getclientdata = (req, res) => {
+  // app.get("", (req, res) => {
+  db.query("SELECT * FROM clients_info", (err, rows, fields) => {
+    if (err) {
+      console.error(err);
+    } else {
+      res.send(rows);
+    }
+  });
+};
+
 // ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 const users = [

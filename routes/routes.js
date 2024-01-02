@@ -54,9 +54,16 @@ import {
   application,
   Enquery,
   addhomeimg,
+  getclientimg,
+  addjobs,
+  getJobOpening,
+  deleteJob,
+  getclientdata,
+  addclintdata,
 } from "../ctrl/controller.js";
 
 import multer from "multer";
+import path from "path";
 
 const router = express.Router();
 
@@ -82,6 +89,12 @@ router.get("/consulting", getWebconsulting);
 router.get("/userexper", getWebuserExperince);
 router.get("/producdev", getWebProducDev);
 router.get("/digitalmarketing", getWebdigitalmarket);
+router.get("/logout", Logout);
+router.get("/application", application);
+router.get("/enquery", Enquery);
+router.get("/getcltimg", getclientimg);
+router.get("/getjobopening", getJobOpening);
+router.get("/getclientdata", getclientdata);
 
 router.post("/add", addWebInfo);
 router.post("/addAbout", addWebInfoAbout);
@@ -105,6 +118,11 @@ router.post("/addconsulting", addWebInfoculsulting);
 router.post("/adduserexper", addWebInfouserExper);
 router.post("/addproductdev", addWebInfoproducdev);
 router.post("/adddigitalmark", addWebInfodigitalmark);
+router.post("/addjobs", addjobs);
+router.post("/addclintdata", addclintdata);
+router.post("/addblogpost", addblogpost);
+
+router.delete("/jobs/:id", deleteJob);
 
 // router.post("/uploads", addWebInfohomeHeroImages);
 
@@ -113,23 +131,20 @@ router.post("/send_mail", sendMailContact);
 router.post("/send_mail_career", sendMailCareer);
 
 const storage = multer.diskStorage({
-  destination: (req, res, cb) => {
-    cb(null, "addhomeimg");
+  destination: (req, file, cb) => {
+    cb(null, "public/addhomeimg");
   },
-  filename: (req, res, cb) => {
+  filename: (req, file, cb) => {
     cb(
       null,
-      filename.fieldname +
-        "-" +Date.now() +"-" +path.extname(file.originalFilename)
+      file.fieldname + "_" + Date.now() + path.extname(file.originalname)
     );
   },
 });
-const upload = multer({ storage: storage });
-router.post("/addhomeimg", upload.single("image"), addhomeimg);
 
-router.get("/logout", Logout);
-router.get("/application", application);
-router.get("/enquery", Enquery);
+const upload = multer({ storage: storage });
+
+router.post("/addhomeimg", upload.single("imagehome"), addhomeimg);
 
 // router.get("/addhomeimg", addhomeimg);
 // router.put("/update/:id", updateWebInfo);

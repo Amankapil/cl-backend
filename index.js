@@ -16,6 +16,7 @@ app.use(bodyParser.json());
 // app.use(cookieParser());
 
 app.use("/code", webroute);
+app.use(express.static("public"));
 
 // const db = mysql.createConnection({
 //   host: "127.0.0.1",
