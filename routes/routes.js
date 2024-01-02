@@ -120,7 +120,7 @@ router.post("/addproductdev", addWebInfoproducdev);
 router.post("/adddigitalmark", addWebInfodigitalmark);
 router.post("/addjobs", addjobs);
 router.post("/addclintdata", addclintdata);
-router.post("/addblogpost", addblogpost);
+// router.post("/addblogpost", addblogpost);
 
 router.delete("/jobs/:id", deleteJob);
 
